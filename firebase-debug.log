@@ -1,0 +1,60 @@
+[debug] [2026-09-19T13:47:22.321Z] ----------------------------------------------------------------------
+[debug] [2026-09-19T13:47:22.326Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\AKASH 4529\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init hosting
+[debug] [2026-09-19T13:47:22.327Z] CLI Version:   15.26.0
+[debug] [2026-09-19T13:47:22.327Z] Platform:      win32
+[debug] [2026-09-19T13:47:22.327Z] Node Version:  v24.18.0
+[debug] [2026-09-19T13:47:22.328Z] Detected Agent: unknown
+[debug] [2026-09-19T13:47:22.328Z] Time:          Sat Sep 19 2026 19:47:22 GMT+0600 (Bangladesh Standard Time)
+[debug] [2026-09-19T13:47:22.328Z] ----------------------------------------------------------------------
+[debug] 
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\AKASH 4529\Downloads\Flintmill\Flintmill
+
+Before we get started, keep in mind:
+
+  * You are initializing within an existing Firebase project directory
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
+[debug] [2026-09-19T13:47:27.559Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-09-19T13:47:27.560Z] > authorizing via signed-in user (akash.alamin.cse@gmail.com)
+[debug] [2026-09-19T13:47:27.630Z] Checked if tokens are valid: true, expires at: 1789829009706
+[debug] [2026-09-19T13:47:27.632Z] Checked if tokens are valid: true, expires at: 1789829009706
+[debug] [2026-09-19T13:47:27.646Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/flintmill [none]
+[debug] [2026-09-19T13:47:28.521Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/flintmill 403
+[debug] [2026-09-19T13:47:28.522Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/flintmill {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2026-09-19T13:47:28.527Z] Request to https://firebase.googleapis.com/v1beta1/projects/flintmill had HTTP Error: 403, The caller does not have permission
+[debug] [2026-09-19T13:47:28.536Z] FirebaseError: Request to https://firebase.googleapis.com/v1beta1/projects/flintmill had HTTP Error: 403, The caller does not have permission
+    at responseToError (C:\Users\AKASH 4529\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:53:12)
+    at RetryOperation._fn (C:\Users\AKASH 4529\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:415:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[error] 
+[error] Error: Failed to get Firebase project flintmill. Please make sure the project exists and your account has permission to access it.
+[debug] [2026-09-19T13:47:55.375Z] ----------------------------------------------------------------------
+[debug] [2026-09-19T13:47:55.379Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\AKASH 4529\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js use --add
+[debug] [2026-09-19T13:47:55.379Z] CLI Version:   15.26.0
+[debug] [2026-09-19T13:47:55.379Z] Platform:      win32
+[debug] [2026-09-19T13:47:55.380Z] Node Version:  v24.18.0
+[debug] [2026-09-19T13:47:55.380Z] Detected Agent: unknown
+[debug] [2026-09-19T13:47:55.380Z] Time:          Sat Sep 19 2026 19:47:55 GMT+0600 (Bangladesh Standard Time)
+[debug] [2026-09-19T13:47:55.380Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2026-09-19T13:47:55.644Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-09-19T13:47:55.644Z] > authorizing via signed-in user (akash.alamin.cse@gmail.com)
+[debug] [2026-09-19T13:47:55.661Z] Checked if tokens are valid: true, expires at: 1789829009706
+[debug] [2026-09-19T13:47:55.661Z] Checked if tokens are valid: true, expires at: 1789829009706
+[debug] [2026-09-19T13:47:55.663Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=1000
+[debug] [2026-09-19T13:47:56.671Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2026-09-19T13:47:56.672Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]

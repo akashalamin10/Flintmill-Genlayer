@@ -1,0 +1,108 @@
+{
+  "hosting": {
+    "public": "public",
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "source": "/mill",
+        "destination": "/pages/mill.html",
+        "type": 301
+      },
+      {
+        "source": "/strike",
+        "destination": "/pages/strike.html",
+        "type": 301
+      },
+      {
+        "source": "/ledger",
+        "destination": "/pages/ledger.html",
+        "type": 301
+      },
+      {
+        "source": "/flint",
+        "destination": "/pages/flint.html",
+        "type": 301
+      },
+      {
+        "source": "/spark",
+        "destination": "/pages/spark.html",
+        "type": 301
+      },
+      {
+        "source": "/setup",
+        "destination": "/pages/setup.html",
+        "type": 301
+      },
+      {
+        "source": "/verify",
+        "destination": "/pages/verify.html",
+        "type": 301
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/pages/mill",
+        "destination": "/pages/mill.html"
+      },
+      {
+        "source": "/pages/strike",
+        "destination": "/pages/strike.html"
+      },
+      {
+        "source": "/pages/ledger",
+        "destination": "/pages/ledger.html"
+      },
+      {
+        "source": "/pages/flint",
+        "destination": "/pages/flint.html"
+      },
+      {
+        "source": "/pages/spark",
+        "destination": "/pages/spark.html"
+      },
+      {
+        "source": "/pages/setup",
+        "destination": "/pages/setup.html"
+      },
+      {
+        "source": "/pages/verify",
+        "destination": "/pages/verify.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(css|js)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache, must-revalidate"
+          }
+        ]
+      },
+      {
+        "source": "**/*.@(png|jpg|jpeg|webp|svg)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=86400"
+          }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
+      }
+    ]
+  }
+}
