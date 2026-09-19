@@ -2,7 +2,7 @@ import { NETWORK, getContractAddress, explorerAddress } from "./config.js";
 import { connectWallet, getAccount, onAccountsChanged, shortAddr, disconnectWallet, getActiveWalletName } from "./wallet.js";
 import { injectBackdrop, startClock, openModal } from "./fx.js";
 
-export const BRAND_MARK = `<img class="brand-logo" src="/assets/images/logo.svg" alt="Flintmill" width="36" height="36">`;
+export const BRAND_MARK = `<img class="brand-logo" src="/assets/images/logo.png" alt="Flintmill" width="36" height="36">`;
 
 const WALLET_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3H5a2 2 0 0 1-2-2Z"/><path d="M3 9v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a1 1 0 0 0-1-1H8"/><circle cx="16.6" cy="14.5" r="1.15" fill="currentColor" stroke="none"/></svg>`;
 
@@ -124,7 +124,7 @@ export async function wireChrome() {
   if (!document.querySelector('link[rel="icon"]')) {
     const link = document.createElement("link");
     link.rel = "icon";
-    link.href = "/assets/images/logo.svg";
+    link.href = "/assets/images/logo.png";
     document.head.appendChild(link);
   }
 

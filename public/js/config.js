@@ -24,7 +24,7 @@ export const APP_METADATA = {
     name: "Flintmill",
     description: "Incident-reproduction bounties judged by GenLayer validator consensus.",
     url: typeof location !== "undefined" ? location.origin : "https://flintmill.example",
-    icons: typeof location !== "undefined" ? [`${location.origin}/assets/images/logo.svg`] : [],
+    icons: typeof location !== "undefined" ? [`${location.origin}/assets/images/logo.png`] : [],
   },
 };
 
