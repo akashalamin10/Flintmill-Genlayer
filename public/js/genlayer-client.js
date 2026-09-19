@@ -1,4 +1,5 @@
 import { NETWORK, SDK, getContractAddress } from "./config.js";
+import { showBusy, hideBusy, setBusyMessage } from "./ui.js";
 
 let sdk = null;
 let chains = null;
@@ -214,15 +215,22 @@ export async function readContract(functionName, args = []) {
 }
 
 export async function writeContract(functionName, args, account, value) {
-  const client = await createWriteClient(account);
-  await connectClient(client);
-  const address = requireContract();
-  const write = { address, functionName, args };
-  if (value != null) write.value = BigInt(value);
-  const withFees = await attachFees(client, write);
-  const hash = await client.writeContract(withFees);
-  const receipt = await waitForTx(client, hash);
-  return { hash, receipt };
+  showBusy("Waiting for wallet and network\u2026");
+  try {
+    const client = await createWriteClient(account);
+    await connectClient(client);
+    const address = requireContract();
+    const write = { address, functionName, args };
+    if (value != null) write.value = BigInt(value);
+    setBusyMessage("Confirm the transaction in your wallet\u2026");
+    const withFees = await attachFees(client, write);
+    const hash = await client.writeContract(withFees);
+    setBusyMessage("Waiting for the transaction to finalize\u2026");
+    const receipt = await waitForTx(client, hash);
+    return { hash, receipt };
+  } finally {
+    hideBusy();
+  }
 }
 
 function parseObject(result) {

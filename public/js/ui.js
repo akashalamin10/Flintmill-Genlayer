@@ -245,6 +245,56 @@ export async function withSpinner(button, task) {
   }
 }
 
+// --- full-screen "waiting on the wallet" overlay ---------------------
+// The button spinner above only shows once a click handler is already
+// running. During writeContract, the MetaMask popup itself can take a
+// moment to appear (or land behind the window), and with nothing else on
+// screen changing it looks like the click did nothing. This overlay gives
+// a persistent, unmissable status message for that whole window.
+let busyCount = 0;
+
+function ensureBusyOverlay() {
+  let overlay = document.getElementById("busyOverlay");
+  if (overlay) return overlay;
+  overlay = document.createElement("div");
+  overlay.id = "busyOverlay";
+  overlay.className = "busy-overlay";
+  overlay.setAttribute("aria-live", "polite");
+  overlay.setAttribute("aria-busy", "true");
+  overlay.innerHTML = `
+    <div class="busy-card">
+      <div class="spinner spinner-lg" role="status" aria-label="Loading"></div>
+      <div class="busy-msg" id="busyMsg">Loading…</div>
+    </div>`;
+  document.body.appendChild(overlay);
+  return overlay;
+}
+
+export function showBusy(message = "Loading…") {
+  busyCount += 1;
+  const overlay = ensureBusyOverlay();
+  const msg = overlay.querySelector("#busyMsg");
+  if (msg) msg.textContent = message;
+  overlay.classList.add("show");
+  document.body.classList.add("is-busy");
+}
+
+export function hideBusy() {
+  busyCount = Math.max(0, busyCount - 1);
+  if (busyCount > 0) return;
+  const overlay = document.getElementById("busyOverlay");
+  if (overlay) overlay.classList.remove("show");
+  document.body.classList.remove("is-busy");
+}
+
+// Updates the message on an already-open overlay without touching busyCount.
+export function setBusyMessage(message) {
+  const overlay = document.getElementById("busyOverlay");
+  if (!overlay) return;
+  const msg = overlay.querySelector("#busyMsg");
+  if (msg) msg.textContent = message;
+}
+
 export function pageLoader(container, message = "Turning the mill…") {
   container.innerHTML = `<div class="loading-row"><span class="spinner" aria-hidden="true"></span><span>${message}</span></div>`;
 }

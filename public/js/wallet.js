@@ -149,6 +149,12 @@ export function disconnectWallet() {
   saveWalletId("");
   localStorage.setItem(DISCONNECTED_KEY, "1");
   window.dispatchEvent(new CustomEvent("flintmill:walletDisconnected"));
+  // Also fire this: pages like the dashboard don't listen for
+  // "walletDisconnected" directly, only for "accountsChanged" (via
+  // onAccountsChanged). Without this, clicking Disconnect updates the
+  // header button but leaves the previous wallet's data sitting on screen
+  // until the next poll or a manual refresh.
+  window.dispatchEvent(new CustomEvent("flintmill:accountsChanged", { detail: "" }));
   if (provider?.disconnect) {
     try {
       provider.disconnect();
@@ -164,6 +170,14 @@ function finalizeConnection(provider, name, walletId, address) {
   localStorage.removeItem(DISCONNECTED_KEY);
   saveAccount(address);
   saveWalletId(walletId);
+  // Fire this ourselves rather than relying on the provider's own
+  // "accountsChanged" event: wallets like MetaMask only emit that when the
+  // authorized account actually changes from their point of view. If the
+  // user disconnected inside Flintmill (our own local flag) and then
+  // reconnects the same already-authorized account, nothing changes on the
+  // wallet's side, so it stays silent -- and pages listening for this event
+  // (like the dashboard) would otherwise never know a connection completed.
+  window.dispatchEvent(new CustomEvent("flintmill:accountsChanged", { detail: address }));
 }
 
 // IMPORTANT ORDER: request accounts (the actual "turn the wallet on" step)
@@ -361,6 +375,7 @@ export async function switchAccount() {
   if (!address) throw new Error("No account selected.");
   localStorage.removeItem(DISCONNECTED_KEY);
   saveAccount(address);
+  window.dispatchEvent(new CustomEvent("flintmill:accountsChanged", { detail: address }));
   return address;
 }
 

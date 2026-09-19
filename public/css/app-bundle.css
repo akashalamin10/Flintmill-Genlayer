@@ -188,6 +188,21 @@ footer { border-top: 1px solid var(--line); padding: 1.4rem var(--edge) 2rem; }
   display: inline-block; flex: 0 0 20px;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+.spinner-sm { width: 14px; height: 14px; border-width: 2px; }
+.spinner-lg { width: 34px; height: 34px; border-width: 3px; }
+
+/* Full-screen "waiting on the wallet" overlay -- shown while writeContract
+   is in flight, so a slow-to-appear MetaMask popup never looks like a
+   dead click. */
+.busy-overlay {
+  position: fixed; inset: 0; z-index: 240; display: none;
+  align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+}
+.busy-overlay.show { display: flex; }
+.busy-card { display: flex; flex-direction: column; align-items: center; gap: 0.9rem; background: var(--panel-2); border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 1.6rem 2rem; }
+.busy-msg { color: var(--ink); font-family: var(--font-mono); font-size: 0.82rem; text-align: center; max-width: 280px; }
+body.is-busy { cursor: progress; }
 
 .alert { padding: 0.65rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid rgba(224, 168, 56, 0.35); background: rgba(224, 168, 56, 0.08); color: var(--warn); font-size: 0.9rem; }
 details.panel summary { cursor: pointer; color: var(--ink); }
