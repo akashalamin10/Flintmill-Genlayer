@@ -255,7 +255,6 @@ export async function getFlint(flintId) {
   return parseObject(result);
 }
 
-export const getBounty = getFlint;
 
 export async function getCredit(address) {
   const raw = String(address || "").trim();
@@ -307,14 +306,12 @@ export async function listFlints() {
   return data;
 }
 
-export const listBounties = listFlints;
 
 export async function listFlintIds() {
   const result = await readContract("list_flint_ids", []);
   return parseIdList(result);
 }
 
-export const listBountyIds = listFlintIds;
 
 function mergeIds(primary, extra) {
   const out = [];
@@ -371,4 +368,3 @@ export async function fetchAllFlintRows(extraIds = []) {
   return ids.map((id) => byId.get(id)).filter(Boolean);
 }
 
-export const fetchAllBountyRows = fetchAllFlintRows;

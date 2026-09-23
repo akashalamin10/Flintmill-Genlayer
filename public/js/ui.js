@@ -216,7 +216,6 @@ export function rememberFlintId(id) {
   localStorage.setItem(LOCAL_IDS, JSON.stringify(ids.slice(0, 50)));
 }
 
-export const rememberBountyId = rememberFlintId;
 
 export function loadLocalFlintIds() {
   try {
@@ -226,7 +225,6 @@ export function loadLocalFlintIds() {
   }
 }
 
-export const loadLocalBountyIds = loadLocalFlintIds;
 
 export function formValue(form, name) {
   return String(new FormData(form).get(name) || "").trim();

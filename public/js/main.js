@@ -27,7 +27,7 @@ ${pageShell({ active: "" })}
       <div class="flow-grid" style="margin-top:2rem">
         <div class="flow-step"><h4>Strike</h4><p>The poster describes the incident and what a real reproduction must prove. Reward is recorded with the flint.</p></div>
         <div class="flow-step"><h4>Claim</h4><p>One hunter owns the flint. No race of competing sparks on the same record.</p></div>
-        <div class="flow-step"><h4>Spark</h4><p>The hunter stores steps, evidence, and notes on-chain. That packet is what validators read.</p></div>
+        <div class="flow-step"><h4>Spark</h4><p>The hunter commits steps, an artifact URL and its SHA-256. The commitment is locked. Validators fetch the artifact and verify the hash.</p></div>
         <div class="flow-step"><h4>Mill</h4><p>Validators reach consensus: IGNITED if the failure is faithfully reproduced, SMOULDER if partial, DEAD if it is not.</p></div>
       </div>
     </div>
@@ -40,7 +40,7 @@ ${pageShell({ active: "" })}
       <div class="why-grid">
         <div class="why-card"><h4>Faithful, not theatrical</h4><p>Validators compare the spark to the incident and the success criteria, not to a screenshot of a dashboard.</p></div>
         <div class="why-card"><h4>No single reviewer</h4><p>The poster cannot bury a real reproduction to avoid paying. The hunter cannot rubber-stamp their own spark.</p></div>
-        <div class="why-card"><h4>Public packet</h4><p>Steps, evidence, notes, and verdict sit in contract state. Anyone can re-read what was judged.</p></div>
+        <div class="why-card"><h4>Public packet</h4><p>Steps, artifact hash, digests, and every verdict round sit in contract state. Anyone can re-hash what was judged.</p></div>
       </div>
     </div>
   </section>

@@ -1,0 +1,6 @@
+firebase-debug.log
+*.log
+__pycache__/
+.pytest_cache/
+node_modules/
+.env

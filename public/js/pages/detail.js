@@ -36,7 +36,7 @@ ${pageShell({ active: "mill" })}
     <div class="stepper" id="stepper"></div>
     <div class="toolbar wrap" id="disputeRow" style="display:none">
       <button class="btn-secondary" id="disputeBtn" type="button">Raise dispute</button>
-      <span class="step-note">Only after a verdict has been written.</span>
+      <span class="step-note">Only after a verdict has been written. One dispute per flint.</span>
     </div>
     <p id="txOut" class="muted"></p>
   </div>
@@ -85,23 +85,28 @@ function renderStepper(flint) {
   const claimAction = status === "open" ? `<button class="btn-primary" id="claimBtn" type="button">Claim flint</button>` : "";
 
   const sparkState = status === "open" ? "locked" : hasSpark ? "done" : "active";
-  const sparkNote = status === "open" ? "Unlocks once the flint is claimed." : hasSpark ? "Reproduction steps and evidence are stored on-chain." : "Only the assigned hunter can submit here.";
-  const sparkAction = status === "open" ? "" : `<a class="btn-secondary" href="/pages/spark.html?id=${encodeURIComponent(flintId)}">${hasSpark ? "View / resubmit" : "Submit spark"}</a>`;
+  const sparkNote = status === "open" ? "Unlocks once the flint is claimed." : hasSpark ? "Committed and locked. Validators verify the artifact hash before judging." : "Only the assigned hunter can submit here. A spark is committed once.";
+  const sparkAction = status === "open" || hasSpark ? "" : `<a class="btn-secondary" href="/pages/spark.html?id=${encodeURIComponent(flintId)}">Submit spark</a>`;
 
   const judgeState = !hasSpark ? "locked" : hasVerdict ? "done" : "active";
+  const disputed = status === "disputed";
   const judgeNote = !hasSpark
     ? "Unlocks once a spark is submitted."
     : hasVerdict
-      ? `Verdict: ${escapeHtml(flint.verdict)}. Independent validators decided this.`
-      : "Anyone can trigger this. Validators decide the word, not the clicker.";
-  const judgeAction = hasSpark && !hasVerdict ? `<button class="btn-primary" id="judgeBtn" type="button">Judge with GenLayer</button>` : "";
+      ? `Verdict: ${escapeHtml(flint.verdict)}. Independent validators decided this.${flint.final ? " Final after dispute." : ""}`
+      : disputed
+        ? "Dispute raised. Validators re-read the artifact together with the dispute notes and replace the verdict and credit split in one step."
+        : "Anyone can trigger this. Validators decide the word, not the clicker.";
+  const judgeAction = hasSpark && !hasVerdict ? `<button class="btn-primary" id="judgeBtn" type="button">${disputed ? "Re-judge with GenLayer" : "Judge with GenLayer"}</button>` : "";
 
   stepper.innerHTML =
     stepRow({ num: 1, title: "Claim flint", state: claimState, note: claimNote, actionHtml: claimAction }) +
     stepRow({ num: 2, title: "Submit spark", state: sparkState, note: sparkNote, actionHtml: sparkAction }) +
     stepRow({ num: 3, title: "Judge with GenLayer", state: judgeState, note: judgeNote, actionHtml: judgeAction });
 
-  disputeRow.style.display = status === "settled" || status === "rejected" || status === "ignited" || status === "dead" ? "flex" : "none";
+  const judged = status === "settled" || status === "rejected" || status === "ignited" || status === "dead";
+  const disputeOpen = judged && !flint.final && Number(flint.dispute_count || 0) < 1;
+  disputeRow.style.display = disputeOpen ? "flex" : "none";
 
   document.getElementById("claimBtn")?.addEventListener("click", async (event) => {
     await withSpinner(event.currentTarget, async () => {
@@ -139,6 +144,31 @@ function renderStepper(flint) {
   });
 }
 
+function artifactHtml(flint) {
+  const url = String(flint.artifact_url || "");
+  if (!url) return `<pre>${escapeHtml(flint.evidence || flint.diff_text || "")}</pre>`;
+  const link = url.startsWith("https://")
+    ? `<a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a>`
+    : escapeHtml(url);
+  return `<p class="mono">Artifact ${link}<br>SHA-256 ${escapeHtml(flint.artifact_sha256 || "")}<br>Spark digest ${escapeHtml(flint.spark_digest || "")}<br>Incident digest ${escapeHtml(flint.incident_digest || "")}</p>`;
+}
+
+function allocationHtml(flint) {
+  if (!flint.allocation || !flint.verdict) return "";
+  const hunter = Number(flint.allocation.hunter || 0);
+  const poster = Number(flint.allocation.poster || 0);
+  return `<p class="mono">Ledger: hunter ${escapeHtml(hunter)} wei · poster ${escapeHtml(poster)} wei${flint.artifact_status === "hash_mismatch" ? " · artifact hash mismatch" : ""}</p>`;
+}
+
+function roundsHtml(flint) {
+  const rounds = Array.isArray(flint.rounds) ? flint.rounds : [];
+  if (!rounds.length) return "";
+  const rows = rounds
+    .map((entry) => `<li class="mono">Round ${escapeHtml(entry.round)}: ${escapeHtml(entry.verdict)} (${escapeHtml(entry.artifact_status)}) · hunter ${escapeHtml(entry.hunter_amount)} / poster ${escapeHtml(entry.poster_amount)}${entry.dispute_notes ? " · after dispute" : ""}</li>`)
+    .join("");
+  return `<details><summary>Verdict history</summary><ul>${rows}</ul></details>`;
+}
+
 async function render() {
   const root = document.getElementById("docket");
   const stepper = document.getElementById("stepper");
@@ -168,15 +198,17 @@ async function render() {
     <p><strong style="color:var(--ink)">Success criteria</strong><br>${escapeHtml(flint.success_criteria || flint.acceptance_criteria)}</p>
     <p><strong style="color:var(--ink)">Reward</strong> ${escapeHtml(flint.reward)} wei</p>
     <p class="mono">Poster ${escapeHtml(shortAddr(flint.poster || flint.buyer) || "—")} · Hunter ${escapeHtml(shortAddr(flint.hunter || flint.worker) || "—")}</p>
-    ${flint.dispute_notes ? `<div class="alert">Dispute notes: ${escapeHtml(flint.dispute_notes)}</div>` : ""}
+    ${flint.dispute_notes ? `<div class="alert">Dispute notes (${escapeHtml(flint.dispute_role || "party")}): ${escapeHtml(flint.dispute_notes)}</div>` : ""}
+    ${allocationHtml(flint)}
     ${
       flint.repro_steps || flint.diff_text
-        ? `<details><summary>Spark, evidence, notes</summary>
+        ? `<details><summary>Spark, artifact, notes</summary>
            <pre>${escapeHtml(flint.repro_steps || flint.explanation || "")}</pre>
-           <pre>${escapeHtml(flint.evidence || flint.diff_text || "")}</pre>
+           ${artifactHtml(flint)}
            <pre>${escapeHtml(flint.notes || flint.test_log || "")}</pre></details>`
         : ""
     }
+    ${roundsHtml(flint)}
   `;
   renderStepper(flint);
 }

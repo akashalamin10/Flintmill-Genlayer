@@ -234,3 +234,5 @@ details.panel summary { cursor: pointer; color: var(--ink); }
   }
   .nav-links.open { display: flex; }
 }
+
+input[type="checkbox"] { width: auto; flex: 0 0 auto; margin: 0 0.5rem 0 0; padding: 0; }
